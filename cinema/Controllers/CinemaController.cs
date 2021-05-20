@@ -51,5 +51,36 @@ namespace cinema.Controllers
         }
         #endregion
 
+        #region Movie
+        [HttpGet("GetMovies")]
+        public IEnumerable<Movie> GetMovies()
+        {
+            var result = new List<Movie>();
+            using (cinemadbContext db = new cinemadbContext())
+            {
+                result = db.Movie.Where(f => f.IsActive == 1).ToList();
+            }
+
+            return result;
+        }
+
+        [HttpPost("CreateMovie")]
+        public async Task<ActionResult<Movie>> CreateMovie(MovieCriteria item)
+        {
+            Movie result = new Movie();
+            using (cinemadbContext db = new cinemadbContext())
+            {
+                result.Name = item.Name;
+                result.Description = item.Description;
+                result.Duration = item.Duration;
+                result.CreatedBy = 1;
+                result.IsActive = 1;
+                result.CreatedAt = DateTime.Now;
+                db.Add(result);
+                db.SaveChanges();
+            }
+            return result;
+        }
+        #endregion
     }
 }
