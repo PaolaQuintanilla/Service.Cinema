@@ -7,5 +7,7 @@ namespace cinema.Criteria
 {
     public class TheaterCriteria
     {
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 }
