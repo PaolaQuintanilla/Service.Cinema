@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace cinema.Criteria
 {
-    public class ProjectionhourCriteria
+    public class SeatCriteria
     {
-        public string Hours { get; set; }
-        public string Minutes { get; set; }
+        public string Name { get; set; }
+        public int Number { get; set; }
         public string Description { get; set; }
+        public int TheaterId { get; set; }
     }
 }

@@ -104,7 +104,7 @@ namespace cinema.Controllers
             Projectionhour result = new Projectionhour();
             using (cinemadbContext db = new cinemadbContext())
             {
-                result.Hour = item.Hour;
+                result.Hour = new TimeSpan( Convert.ToInt32(item.Hours), Convert.ToInt32(item.Minutes), 0);
                 result.Description = item.Description;
                 result.CreatedBy = 1;
                 result.IsActive = 1;
@@ -138,6 +138,40 @@ namespace cinema.Controllers
                 result.ProjectionHourId = item.ProjectionHourId;
                 result.MovieId = item.MovieId;
                 result.SeatId = item.SeatId;
+                db.Add(result);
+                db.SaveChanges();
+            }
+            return result;
+        }
+        #endregion
+
+        #region Seat
+        [HttpGet("GetSeatsBy/{id}")]
+        public IEnumerable<Seat> GetSeatsBy(int id)
+        {
+            var result = new List<Seat>();
+            using (cinemadbContext db = new cinemadbContext())
+            {
+                result = db.Seat.Where(s => s.TheaterId == id).ToList();
+            }
+
+            return result;
+        }
+
+        [HttpPost("CreateSeat")]
+        public async Task<ActionResult<Seat>> CreateSeat(SeatCriteria item)
+        {
+            Seat result = new Seat();
+            using (cinemadbContext db = new cinemadbContext())
+            {
+                result.Name = item.Name;
+                result.Description = item.Description;
+                result.Sold = 0;
+                result.TheaterId = item.TheaterId;
+                result.CreatedBy = 1;
+                result.IsActive = 1;
+                result.CreatedAt = DateTime.Now;
+                result.Number = item.Number;
                 db.Add(result);
                 db.SaveChanges();
             }
