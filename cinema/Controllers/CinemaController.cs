@@ -115,5 +115,34 @@ namespace cinema.Controllers
             return result;
         }
         #endregion
+
+        #region Ticket
+        [HttpGet("GetTicketsBy")]
+        public IEnumerable<Ticket> GetTickes()
+        {
+            var result = new List<Ticket>();
+            using (cinemadbContext db = new cinemadbContext())
+            {
+                result = db.Ticket.ToList();
+            }
+
+            return result;
+        }
+
+        [HttpPost("CreateTicket")]
+        public async Task<ActionResult<Ticket>> CreateTicket(TicketCriteria item)
+        {
+            Ticket result = new Ticket();
+            using (cinemadbContext db = new cinemadbContext())
+            {
+                result.ProjectionHourId = item.ProjectionHourId;
+                result.MovieId = item.MovieId;
+                result.SeatId = item.SeatId;
+                db.Add(result);
+                db.SaveChanges();
+            }
+            return result;
+        }
+        #endregion
     }
 }

@@ -32,6 +32,13 @@ namespace cinema
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "cinema", Version = "v1" });
             });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsApi",
+                    builder => builder.WithOrigins("http://localhost:4200", "http://packager.xr-hza.anonymous.procedureguide-client.exp.direct:80")
+                .AllowAnyHeader()
+                .AllowAnyMethod());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +54,7 @@ namespace cinema
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors("CorsApi");
 
             app.UseAuthorization();
 
