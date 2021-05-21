@@ -1,5 +1,6 @@
 ﻿using cinema.Criteria;
 using cinema.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace cinema.Controllers
 {
+    [EnableCors("CorsApi")]
     [ApiController]
     [Route("[controller]")]
     public class CinemaController : ControllerBase
@@ -73,6 +75,37 @@ namespace cinema.Controllers
                 result.Name = item.Name;
                 result.Description = item.Description;
                 result.Duration = item.Duration;
+                result.CreatedBy = 1;
+                result.IsActive = 1;
+                result.CreatedAt = DateTime.Now;
+                db.Add(result);
+                db.SaveChanges();
+            }
+            return result;
+        }
+        #endregion
+
+        #region Hours
+        [HttpGet("GetHours")]
+        public IEnumerable<Projectionhour> GetHours()
+        {
+            var result = new List<Projectionhour>();
+            using (cinemadbContext db = new cinemadbContext())
+            {
+                result = db.Projectionhour.Where(f => f.IsActive == 1).ToList();
+            }
+
+            return result;
+        }
+
+        [HttpPost("CreateHour")]
+        public async Task<ActionResult<Projectionhour>> CreateHour(ProjectionhourCriteria item)
+        {
+            Projectionhour result = new Projectionhour();
+            using (cinemadbContext db = new cinemadbContext())
+            {
+                result.Hour = item.Hour;
+                result.Description = item.Description;
                 result.CreatedBy = 1;
                 result.IsActive = 1;
                 result.CreatedAt = DateTime.Now;
