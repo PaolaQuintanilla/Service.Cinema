@@ -17,6 +17,7 @@ namespace cinema.Models
 
         public virtual DbSet<Client> Client { get; set; }
         public virtual DbSet<Movie> Movie { get; set; }
+        public virtual DbSet<Projection> Projection { get; set; }
         public virtual DbSet<Projectionhour> Projectionhour { get; set; }
         public virtual DbSet<Receipt> Receipt { get; set; }
         public virtual DbSet<Seat> Seat { get; set; }
@@ -48,6 +49,36 @@ namespace cinema.Models
                 entity.Property(e => e.Description).IsUnicode(false);
 
                 entity.Property(e => e.Name).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Projection>(entity =>
+            {
+                entity.HasIndex(e => e.MovieId)
+                    .HasName("fk_MovieTheater_Movie1_idx");
+
+                entity.HasIndex(e => e.ProjectionHourId)
+                    .HasName("fk_Ticket_ProjectionHour1_idx");
+
+                entity.HasIndex(e => e.TheaterId)
+                    .HasName("fk_Ticket_Theater1_idx");
+
+                entity.HasOne(d => d.Movie)
+                    .WithMany(p => p.Projection)
+                    .HasForeignKey(d => d.MovieId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_MovieTheater_Movie1");
+
+                entity.HasOne(d => d.ProjectionHour)
+                    .WithMany(p => p.Projection)
+                    .HasForeignKey(d => d.ProjectionHourId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_Ticket_ProjectionHour1");
+
+                entity.HasOne(d => d.Theater)
+                    .WithMany(p => p.Projection)
+                    .HasForeignKey(d => d.TheaterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_Ticket_Theater1");
             });
 
             modelBuilder.Entity<Projectionhour>(entity =>
@@ -103,26 +134,17 @@ namespace cinema.Models
 
             modelBuilder.Entity<Ticket>(entity =>
             {
-                entity.HasIndex(e => e.MovieId)
-                    .HasName("fk_MovieTheater_Movie1_idx");
-
-                entity.HasIndex(e => e.ProjectionHourId)
-                    .HasName("fk_Ticket_ProjectionHour1_idx");
+                entity.HasIndex(e => e.ProjectionId)
+                    .HasName("fk_Ticket_Projection1_idx");
 
                 entity.HasIndex(e => e.SeatId)
                     .HasName("fk_Ticket_Seat1_idx");
 
-                entity.HasOne(d => d.Movie)
+                entity.HasOne(d => d.Projection)
                     .WithMany(p => p.Ticket)
-                    .HasForeignKey(d => d.MovieId)
+                    .HasForeignKey(d => d.ProjectionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_MovieTheater_Movie1");
-
-                entity.HasOne(d => d.ProjectionHour)
-                    .WithMany(p => p.Ticket)
-                    .HasForeignKey(d => d.ProjectionHourId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_Ticket_ProjectionHour1");
+                    .HasConstraintName("fk_Ticket_Projection1");
 
                 entity.HasOne(d => d.Seat)
                     .WithMany(p => p.Ticket)

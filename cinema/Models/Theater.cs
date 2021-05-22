@@ -10,6 +10,7 @@ namespace cinema.Models
     {
         public Theater()
         {
+            Projection = new HashSet<Projection>();
             Seat = new HashSet<Seat>();
         }
 
@@ -27,6 +28,8 @@ namespace cinema.Models
         public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        [InverseProperty("Theater")]
+        public virtual ICollection<Projection> Projection { get; set; }
         [InverseProperty("Theater")]
         public virtual ICollection<Seat> Seat { get; set; }
     }

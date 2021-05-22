@@ -10,7 +10,7 @@ namespace cinema.Models
     {
         public Projectionhour()
         {
-            Ticket = new HashSet<Ticket>();
+            Projection = new HashSet<Projection>();
         }
 
         [Key]
@@ -26,6 +26,6 @@ namespace cinema.Models
         public short IsActive { get; set; }
 
         [InverseProperty("ProjectionHour")]
-        public virtual ICollection<Ticket> Ticket { get; set; }
+        public virtual ICollection<Projection> Projection { get; set; }
     }
 }
